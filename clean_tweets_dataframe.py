@@ -23,7 +23,7 @@ class Clean_Tweets:
         drop duplicate rows
         """
         
-        ---
+        df = self.df.drop_duplicates(subset ='original_text')
         
         return df
     def convert_to_datetime(self, df:pd.DataFrame)->pd.DataFrame:
