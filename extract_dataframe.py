@@ -67,40 +67,62 @@ class TweetDfExtractor:
         return source
 
     def find_screen_name(self)->list:
-        screen_name = 
+        screen_name = [x['user']['screen_name'] for x in self.tweets_list]
+        
+        return screen_name 
 
     def find_followers_count(self)->list:
-        followers_count = 
+        followers_count = [x['user']['followers_count'] for x in self.tweets_list]
+        
+        return followers_count 
 
     def find_friends_count(self)->list:
-        friends_count = 
+         friends_count = [x['user']['friends_count'] for x in self.tweets_list]
+        
+        return friends_count 
 
     def is_sensitive(self)->list:
-        try:
-            is_sensitive = [x['possibly_sensitive'] for x in self.tweets_list]
-        except KeyError:
-            is_sensitive = None
-
+        is_sensitive = []
+        for tweet in self.tweets_list:
+            if 'possibly_sensitive' in tweet.keys():
+                is_sensitive.append(tweet['possibly_sensitive'])
+            else: is_sensitive.append(None)
+            
         return is_sensitive
 
     def find_favourite_count(self)->list:
-        
+        favorite_count = [x.get('retweeted_status',{}).get('favorite_count',0) for x in self.tweets_list]
+
+        return favorite_count
     
     def find_retweet_count(self)->list:
-        retweet_count = 
+        retweet_count = []
+        for tweet in self.tweets_list:
+            if 'retweeted_status' in tweet.keys():
+                retweet_count.append(tweet['retweeted_status']['retweet_count'])
+            else: retweet_count.append(0)
+    
+        return retweet_count 
 
     def find_hashtags(self)->list:
-        hashtags =
+        hashtags = []
+        for tw in self.tweets_list:
+            hashtags.append(", ".join([hashtag_item['text'] for hashtag_item in tw['entities']['hashtags']]))
+            
+        return hashtags
 
     def find_mentions(self)->list:
-        mentions = 
+        mentions = []
+        for tw in self.tweets_list:
+            mentions.append( ", ".join([mention['screen_name'] for mention in tw['entities']['user_mentions']]))
+
+        return mentions
 
 
     def find_location(self)->list:
-        try:
-            location = self.tweets_list['user']['location']
-        except TypeError:
-            location = ''
+        location = []
+        for tweet in self.tweets_list:
+            location.append(tweet['user']['location'])
         
         return location
 
