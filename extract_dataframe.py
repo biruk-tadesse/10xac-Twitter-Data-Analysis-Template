@@ -1,8 +1,8 @@
 import json
 import pandas as pd
 from textblob import TextBlob
-import zipfile
 
+#
 def read_json(json_file: str)->list:
     """
     json file reader to open and read json files into a list
@@ -14,19 +14,14 @@ def read_json(json_file: str)->list:
     -------
     length of the json file and a list of json
     """
-    
-    # tweets_data = []
-    # for tweets in open(json_file,'r'):
-    #     tweets_data.append(json.loads(tweets))
-    
-    
-    # return len(tweets_data), tweets_data
+
     tweets_data = []
     for tweets in open(json_file,'r'):
         tweets_data.append(json.loads(tweets))
 
     return len(tweets_data), tweets_data
 
+#
 class TweetDfExtractor:
     """
     this function will parse tweets json into a pandas dataframe
@@ -53,44 +48,44 @@ class TweetDfExtractor:
             text = None
         return text
        
-    # 
+    # calculate polarity and subjectivity
     def find_sentiments(self, text)->list:
         polarity = [TextBlob(x).polarity for x in text]
         subjectivity = [TextBlob(x).subjectivity for x in text]
 
         return polarity, subjectivity
 
-    # 
+    # finds the tweet created time
     def find_created_time(self)->list:
         created_at = [x['created_at'] for x in self.tweets_list]
        
         return created_at
     
-    # 
+    # finds source
     def find_source(self)->list:
         source = [x['source'] for x in self.tweets_list]
 
         return source
 
-    # 
+    # finds author name
     def find_screen_name(self)->list:
         screen_name = [x['user']['screen_name'] for x in self.tweets_list]
         
         return screen_name
     
-    # 
+    # finds followers
     def find_followers_count(self)->list:
         followers_count = [x['user']['followers_count'] for x in self.tweets_list]
         
         return followers_count
 
-    # 
+    # finds friends count
     def find_friends_count(self)->list:
         friends_count = [x['user']['friends_count'] for x in self.tweets_list]
         
         return friends_count
 
-    # 
+    # checks if the tweet is sensitive
     def is_sensitive(self)->list:
         is_sensitive = []
         for tweet in self.tweets_list:
@@ -100,13 +95,13 @@ class TweetDfExtractor:
             
         return is_sensitive
 
-    # 
+    # counts favourite
     def find_favourite_count(self)->list:
          favorite_count = [x.get('retweeted_status',{}).get('favorite_count',0) for x in self.tweets_list]
 
          return favorite_count
 
-    # 
+    # finds retweet count
     def find_retweet_count(self)->list:
         retweet_count = []
         for tweet in self.tweets_list:
@@ -116,7 +111,7 @@ class TweetDfExtractor:
     
         return retweet_count
 
-    # 
+    # finds hashtags
     def find_hashtags(self)->list:
         hashtags = []
         for tw in self.tweets_list:
@@ -124,7 +119,7 @@ class TweetDfExtractor:
             
         return hashtags
 
-    # 
+    # extracts mentions
     def find_mentions(self)->list:
         mentions = []
         for tw in self.tweets_list:
@@ -132,7 +127,7 @@ class TweetDfExtractor:
 
         return mentions
 
-    # 
+    #  extracts location data
     def find_location(self)->list:
         location = []
         for tweet in self.tweets_list:
@@ -140,7 +135,7 @@ class TweetDfExtractor:
         
         return location
     
-    #
+    # extracts language data
     def find_lang(self)->list:
         lang = [x['lang'] for x in self.tweets_list]
         
